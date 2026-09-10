@@ -13,7 +13,7 @@ import time
 import re
 from datetime import datetime
 
-PORT = 5000
+PORT = int(os.environ.get("PORT", 5000))
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(BASE_DIR, "roadmap.db")
 UPLOADS_DIR = os.path.join(BASE_DIR, "uploads")
@@ -487,19 +487,19 @@ if __name__ == '__main__':
     server = None
     for attempt in range(10):
         try:
-            server = ReusableTCPServer(("127.0.0.1", PORT), RoadmapRequestHandler)
-            print(f"🚀 Master Roadmap Backend Server running at http://localhost:{PORT}")
+            server = ReusableTCPServer(("0.0.0.0", PORT), RoadmapRequestHandler)
+            print(f"🚀 Master Roadmap Backend Server running at http://0.0.0.0:{PORT}")
             break
         except OSError:
             import time
             time.sleep(1)
     
     if not server:
-        for port in range(5001, 5010):
+        for port in range(PORT + 1, PORT + 10):
             try:
-                server = ReusableTCPServer(("127.0.0.1", port), RoadmapRequestHandler)
+                server = ReusableTCPServer(("0.0.0.0", port), RoadmapRequestHandler)
                 PORT = port
-                print(f"🚀 Master Roadmap Backend Server running at http://localhost:{PORT}")
+                print(f"🚀 Master Roadmap Backend Server running at http://0.0.0.0:{PORT}")
                 break
             except OSError:
                 continue
