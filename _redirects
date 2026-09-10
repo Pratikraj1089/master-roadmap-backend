@@ -1,0 +1,3 @@
+# Netlify Redirects Configuration for Render Backend Proxy
+# Replace https://master-roadmap-backend.onrender.com with your actual Render backend URL after deploying on Render
+/api/*  https://master-roadmap-backend.onrender.com/api/:splat  200
