@@ -294,7 +294,7 @@ class RoadmapRequestHandler(http.server.SimpleHTTPRequestHandler):
             cursor = conn.cursor()
             pass_hash = hash_password(password)
             cursor.execute(
-                "SELECT id, username, is_admin FROM users WHERE username = ? AND password_hash = ?",
+                "SELECT id, username, is_admin FROM users WHERE LOWER(username) = LOWER(?) AND password_hash = ?",
                 (username, pass_hash)
             )
             row = cursor.fetchone()
