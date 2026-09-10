@@ -100,18 +100,21 @@ def init_db():
     ''')
 
     default_notes = [
-        ("aiml", "🐍 Python & Data Science Master PDF CheatSheet", "Comprehensive reference PDF covering Python Data Structures, NumPy, Pandas & ML Algorithms.", "https://raw.githubusercontent.com/gregio/python-cheatsheet/master/python-cheatsheet.pdf", 1),
-        ("backend", "⚡ Backend Architecture, HTTP & System Design Notes", "Detailed notes on HTTP/2, RESTful URI Design, Database Indexing, Caching & Microservices.", "https://raw.githubusercontent.com/donnemartin/system-design-primer/master/README.md", 0),
-        ("sql", "🗄️ PostgreSQL & Advanced SQL Window Functions PDF Guide", "Complete guide for Joins, Subqueries, CTEs, Window Functions & Postgres Tuning.", "https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf", 1),
-        ("webdev", "🎨 Modern HTML5, CSS Grid & JavaScript ES6+ Study Notes", "Quick reference notes for CSS Flexbox, Grid, Execution Context, Closures & Promises.", "https://developer.mozilla.org/en-US/docs/Web/JavaScript", 0),
-        ("cloud", "☁️ AWS Cloud & DevOps Infrastructure Master PDF Guide", "Comprehensive guide covering AWS EC2, S3, IAM, VPC, Lambda, ECS Containers & CloudWatch.", "https://d1.awsstatic.com/whitepapers/aws-overview.pdf", 1),
-        ("dbms", "🗄️ Database Systems & SQL Master PDF Guide", "Complete guide covering Relational Model, ER Diagrams, Normalization (1NF-BCNF), Indexing & Transactions.", "https://www.postgresql.org/files/documentation/pdf/16/postgresql-16-A4.pdf", 1),
-        ("sysdesign", "🏗️ System Design & Architecture Primer Notes", "Comprehensive reference notes on Scalability, Load Balancing, Caching, Messaging Queues & Microservices.", "https://raw.githubusercontent.com/donnemartin/system-design-primer/master/README.md", 0)
+        ("aiml", "🐍 Python & Data Science Master PDF CheatSheet", "Comprehensive reference PDF covering Python Data Structures, NumPy, Pandas & ML Algorithms.", "/uploads/python_aiml_master_notes.pdf", 1),
+        ("backend", "⚡ Backend Architecture, HTTP & System Design Notes", "Detailed notes on HTTP/2, RESTful URI Design, Database Indexing, Caching & Microservices.", "/uploads/backend_architecture_notes.pdf", 1),
+        ("sql", "🗄️ PostgreSQL & Advanced SQL Window Functions PDF Guide", "Complete guide for Joins, Subqueries, CTEs, Window Functions & Postgres Tuning.", "/uploads/sql_databases_notes.pdf", 1),
+        ("webdev", "🎨 Modern HTML5, CSS Grid & JavaScript ES6+ Study Notes", "Quick reference notes for CSS Flexbox, Grid, Execution Context, Closures & Promises.", "/uploads/web_development_notes.pdf", 1),
+        ("cloud", "☁️ AWS Cloud & DevOps Infrastructure Master PDF Guide", "Comprehensive guide covering AWS EC2, S3, IAM, VPC, Lambda, ECS Containers & CloudWatch.", "/uploads/aws_cloud_devops_notes.pdf", 1),
+        ("dbms", "🗄️ Database Systems & SQL Master PDF Guide", "Complete guide covering Relational Model, ER Diagrams, Normalization (1NF-BCNF), Indexing & Transactions.", "/uploads/dbms_engineering_notes.pdf", 1),
+        ("sysdesign", "🏗️ System Design & Architecture Primer Notes", "Comprehensive reference notes on Scalability, Load Balancing, Caching, Messaging Queues & Microservices.", "/uploads/system_design_primer_notes.pdf", 1)
     ]
     for n in default_notes:
-        cursor.execute("SELECT id FROM section_notes WHERE section_id = ? AND note_title = ?", (n[0], n[1]))
-        if not cursor.fetchone():
+        cursor.execute("SELECT id FROM section_notes WHERE section_id = ?", (n[0],))
+        row = cursor.fetchone()
+        if not row:
             cursor.execute("INSERT INTO section_notes (section_id, note_title, description, file_url, is_pdf) VALUES (?, ?, ?, ?, ?)", n)
+        else:
+            cursor.execute("UPDATE section_notes SET note_title = ?, description = ?, file_url = ?, is_pdf = ? WHERE section_id = ?", (n[1], n[2], n[3], n[4], n[0]))
     
     conn.commit()
     conn.close()
